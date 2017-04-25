@@ -1,0 +1,65 @@
+{
+  "name": "google-spreadsheet-cli",
+  "version": "0.0.1",
+  "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
+  "description": "Google spreadsheet CLI",
+  "engines": {
+    "node": "6"
+  },
+  "nyc": {
+    "exclude": [
+      "node_modules",
+      "dist",
+      "coverage",
+      "webpack.config.js",
+      "**/**.test.js"
+    ]
+  },
+  "bin": {
+    "binary": "./bin/binary"
+  },
+  "scripts": {
+    "test": "true || mocha $(find src -name '*.test.js')",
+    "test:watch": "true || mocha -w $(find src -name '*.test.js')",
+    "test:coverage": "true || nyc --all --statements=100 --lines=100 --functions=100 --branches=100 --check-coverage --reporter=lcov --reporter=cobertura --report-dir=coverage -- npm run --silent test",
+    "test:coverage:send": "true || cat ./coverage/lcov.info | coveralls",
+    "update": "updtr",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
+    "changelog-git": "npm run changelog && git add CHANGELOG.md && git commit -m 'docs(changelog): updated' && git push origin master"
+  },
+  "main": "src/cli.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fgribreau/google-spreadsheet-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fgribreau/google-spreadsheet-cli/issues"
+  },
+  "homepage": "https://github.com/fgribreau/google-spreadsheet-cli",
+  "keywords": [
+    "google,",
+    "spreadsheet,",
+    "google",
+    "apps,",
+    "cli"
+  ],
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "conventional-changelog": "^1.1.0",
+    "conventional-changelog-cli": "^1.2.0",
+    "coveralls": "^2.11.12",
+    "mocha": "^3.0.1",
+    "nyc": "^8.1.0",
+    "sinon": "^1.17.5",
+    "updtr": "^0.2.1"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "debug": "^2.6.4",
+    "google-spreadsheet": "^2.0.3",
+    "json5": "^0.5.1",
+    "lodash": "^4.17.4",
+    "yargs": "^7.1.0"
+  },
+  "license": "MIT"
+}
