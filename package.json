@@ -16,7 +16,7 @@
     ]
   },
   "bin": {
-    "binary": "./bin/google-spreadsheet-cli"
+    "google-spreadsheet-cli": "./bin/google-spreadsheet-cli"
   },
   "scripts": {
     "test": "true || mocha $(find src -name '*.test.js')",
