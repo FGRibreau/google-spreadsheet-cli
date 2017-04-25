@@ -8,37 +8,15 @@
 - [**Charts, simple as a URL**. No more server-side rendering pain, 1 url = 1 chart](https://image-charts.com)
 - [Looking for a free **Redis GUI**?](http://redsmin.com) [Or for **real-time alerting** & monitoring for Redis?](http://redsmin.com)
 
-<p align="center"><img src="https://cloud.githubusercontent.com/assets/138050/19687045/2f893296-9ac4-11e6-9c5b-fca23436c2bc.gif" alt="mixpanel cli" title="mixpanel cli"></p>
+<!-- <p align="center"><img src="" alt="mixpanel cli" title="mixpanel cli"></p> -->
 
-## Install (docker 🐳)
+## Features
 
-Use this approach if you don't know/want to setup your NodeJS environment, that's what containers are good for.
+- List worksheets
+- Append a row to a worksheet
+- Automatically adds the header row if it's missing
+- Permissive JSON format through [JSON5](http://json5.org/)
 
-```shell
-# open ~/.bashrc  (or equivalent)
-nano ~/.bashrc
-
-# edit it
-function google-spreadsheet-cli(){
- docker run -i --rm fgribreau/google-spreadsheet-cli:latest $@
-}
-
-# save it
-
-# source it
-source ~/.bashrc
-
-# run it!
-google-spreadsheet-cli --token=XXX append VAL1 VAL2 VAL3
-
-# done!
-```
-
-## Install (NodeJS)
-
-```
-npm i google-spreadsheet-cli -g
-```
 
 ## Currently supported
 
@@ -56,12 +34,6 @@ Options:
 @FGRibreau - https://twitter.com/FGRibreau
 ```
 
-## Features
-
-- List worksheets
-- Append a row to a worksheet
-- Automatically adds the header row if it's missing
-- Permissive JSON format through [JSON5](http://json5.org/)
 
 ## Usage
 
@@ -92,6 +64,37 @@ google-spreadsheet-cli \
   get --worksheet_id od6 \
   append -- json '{a:1, b:2, c:3}'
 ```
+
+## Setup (docker 🐳)
+
+Use this approach if you don't know/want to setup your NodeJS environment, that's what containers are good for.
+
+```shell
+# open ~/.bashrc  (or equivalent)
+nano ~/.bashrc
+
+# edit it
+function google-spreadsheet-cli(){
+ docker run -i --rm fgribreau/google-spreadsheet-cli:latest $@
+}
+
+# save it
+
+# source it
+source ~/.bashrc
+
+# run it!
+google-spreadsheet-cli --token=XXX append VAL1 VAL2 VAL3
+
+# done!
+```
+
+## Setup (NodeJS)
+
+```
+npm i google-spreadsheet-cli -g
+```
+
 
 ## Todo
 
