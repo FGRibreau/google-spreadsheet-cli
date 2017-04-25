@@ -62,8 +62,12 @@ google-spreadsheet-cli \
   --credential ~/myproject-8cbb20000000.json \
   worksheets \
   get --worksheet_id od6 \
-  append -- json '{a:1, b:2, c:3}'
+  append --json '{a:1, b:2, c:3}'
+
+Row added.
 ```
+
+Note that the JSON data we passed was not strictly valid still it worked thanks to JSON5.
 
 ## Setup (docker 🐳)
 
