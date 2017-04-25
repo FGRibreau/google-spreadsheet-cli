@@ -1,16 +1,16 @@
-### Google SpreadSheet CLI
+### 📊 Google Spreadsheet CLI
 
 ![deps](https://img.shields.io/david/fgribreau/google-spreadsheet-cli.svg?style=flat) ![Version](https://img.shields.io/npm/v/google-spreadsheet-cli.svg?style=flat) [![Docker hub](https://img.shields.io/docker/pulls/fgribreau/google-spreadsheet-cli.svg)](https://hub.docker.com/r/fgribreau/google-spreadsheet-cli/) [![available-for-advisory](https://img.shields.io/badge/available%20for%20consulting%20advisory-yes-ff69b4.svg?)](http://bit.ly/2c7uFJq) ![extra](https://img.shields.io/badge/actively%20maintained-yes-ff69b4.svg) [![Twitter Follow](https://img.shields.io/twitter/follow/fgribreau.svg?style=flat)](https://twitter.com/FGRibreau)
 
 
-## Shameless plug
+## ❤️ Shameless plug
 
 - [**Charts, simple as a URL**. No more server-side rendering pain, 1 url = 1 chart](https://image-charts.com)
 - [Looking for a free **Redis GUI**?](http://redsmin.com) [Or for **real-time alerting** & monitoring for Redis?](http://redsmin.com)
 
 <!-- <p align="center"><img src="" alt="mixpanel cli" title="mixpanel cli"></p> -->
 
-## Features
+## 📢 Features
 
 - List worksheets
 - Append a row to a worksheet
@@ -35,7 +35,7 @@ Options:
 ```
 
 
-## Usage
+## 🎩 Usage
 
 First thing first, you need your Google credentials, [follow the authentication instructions there](https://github.com/theoephraim/node-google-spreadsheet#service-account-recommended-method). Then save the JSON file somewhere, e.g. `~/myproject-8cbb20000000.json`.
 
@@ -100,7 +100,7 @@ npm i google-spreadsheet-cli -g
 ```
 
 
-## Todo
+## 🔫 Todo
 
 - [ ] Integration tests
 
