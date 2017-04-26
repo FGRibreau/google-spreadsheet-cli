@@ -19,8 +19,8 @@
     "google-spreadsheet-cli": "./bin/google-spreadsheet-cli"
   },
   "scripts": {
-    "test": "mocha -t 8000 $(find src -name '*.test.js')",
-    "test:watch": "mocha -t 8000  -w $(find src -name '*.test.js')",
+    "test": "mocha -t 20000 $(find src -name '*.test.js')",
+    "test:watch": "mocha -t 20000  -w $(find src -name '*.test.js')",
     "test:coverage": "nyc --all --statements=94 --lines=94 --functions=96 --branches=66 --check-coverage --reporter=lcov --reporter=cobertura --report-dir=coverage -- npm run --silent test",
     "test:coverage:send": "cat ./coverage/lcov.info | coveralls",
     "update": "updtr",
