@@ -39,7 +39,7 @@ Options:
 ```
 
 
-## 🎩 Usage
+### 🎩 Authentication
 
 First thing first, you need your Google credentials, [follow the authentication instructions there](https://github.com/theoephraim/node-google-spreadsheet#service-account-recommended-method). Then save the JSON file somewhere, e.g. `~/myproject-8cbb20000000.json`.
 
@@ -48,12 +48,12 @@ Locate the spreadsheet you want to work with, take the id from Google spreadshee
 If you wish to directly pass the base64 stringified JSON as `--credential` parameter you might first want to only keep `client_email` and `private_key` using [jq.node](https://github.com/FGRibreau/jq.node) like so:
 
 ```bash
-CREDENTIAL=$(cat ~/myproject-8cbb20000000.json | jq -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
+export CREDENTIALS=$(cat ~/myproject-8cbb20000000.json | jq -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
 ```
 
-### List worksheets
+### `worksheets list`
 
-Then list your document worksheet:
+List spreadsheet document worksheets:
 
 ```bash
 google-spreadsheet-cli \
@@ -71,7 +71,7 @@ google-spreadsheet-cli \
 ```bash
 google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIAL \
+  --credentials $CREDENTIALS \
   worksheets list
 
 {"id":"od6","title":"my first worksheet"}
@@ -79,16 +79,14 @@ google-spreadsheet-cli \
 {"id":"ad7","title":"oh oh oh the last one"}
 ```
 
-### Append a row to a worksheet
+### `worksheets get --worksheet_id {worksheet_id} append --json`
 
-`google-spreadsheet-cli worksheets get --worksheet_id {worksheet_id} append --json`
-
-Once you got the `worksheet_id` it's really simple to append a row:
+Append a row to a worksheet. Once you got the `worksheet_id` it's really simple to append a row:
 
 ```bash
-google-spreadsheet-cli \
+$ google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIAL \
+  --credentials $CREDENTIALS \
   worksheets \
   get --worksheet_id od6 \
   append --json '{a:1, b:2, c:3}'
@@ -98,14 +96,14 @@ google-spreadsheet-cli \
 
 Note that the JSON data we passed was not strictly valid still it worked thanks to JSON5.
 
-### Add a worksheet
+### `worksheets add <title>`
 
-`google-spreadsheet-cli worksheets add <title>`
+Add a worksheet to the spreadsheet document:
 
 ```bash
-google-spreadsheet-cli \
+$ google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIAL \
+  --credentials $CREDENTIALS \
   worksheets \
   add my_awesome_worksheet
 
@@ -115,9 +113,6 @@ google-spreadsheet-cli \
 Other options:
 
 ```bash
-bin/google-spreadsheet-cli worksheets add <title>
-
-Options:
   --spreadsheetId, --id   spreadsheet id, the long id in the sheets URL  [required]
   --credentials, --creds  json credential path (use environment variable to specify a JSON stringified credential in base64)  [required]
   --rowCount, --row       number of rows  [default: 50]
@@ -125,14 +120,14 @@ Options:
   -h, --help              Show help  [boolean]
 ```
 
-### Remove a worksheet
+### `worksheets remove <worksheet_id>`
 
-`google-spreadsheet-cli worksheets remove <worksheet_id>`
+Remove a worksheet from the spreadsheet document:
 
 ```bash
-google-spreadsheet-cli \
+$ google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIAL \
+  --credentials $CREDENTIALS \
   worksheets \
   remove od6
 
@@ -160,7 +155,7 @@ source ~/.bashrc
 # run it!
 google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIAL \
+  --credentials $CREDENTIALS \
   worksheets \
   get --worksheet_id od6 \
   append --json '{a:1, b:2, c:3}'
