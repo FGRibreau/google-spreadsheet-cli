@@ -54,7 +54,8 @@ describe('worksheets', () => {
         t.strictEqual(title, NAME);
         t.strictEqual(rowCount, ROW_COUNT);
         t.strictEqual(colCount, COL_COUNT);
-        return assertListInclude(`${id} - ${NAME}`);
+        return assertListInclude(`${id}`);
+        return assertListInclude(`${name}`);
       })
     });
   });
