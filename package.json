@@ -1,6 +1,6 @@
 {
   "name": "google-spreadsheet-cli",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
   "description": "📊 CLI for reading and writing data into Google Spreadsheet",
   "engines": {
