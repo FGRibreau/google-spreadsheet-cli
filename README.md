@@ -1,5 +1,7 @@
 ### 📊 Google Spreadsheet CLI
 
+[![Build Status](https://img.shields.io/circleci/project/FGRibreau/google-spreadsheet-cli.svg)](https://circleci.com/gh/FGRibreau/google-spreadsheet-cli/)
+[![Coverage Status](https://img.shields.io/coveralls/FGRibreau/google-spreadsheet-cli/master.svg)](https://coveralls.io/github/FGRibreau/google-spreadsheet-cli?branch=master)
 ![deps](https://img.shields.io/david/fgribreau/google-spreadsheet-cli.svg?style=flat) ![Version](https://img.shields.io/npm/v/google-spreadsheet-cli.svg?style=flat) [![Docker hub](https://img.shields.io/docker/pulls/fgribreau/google-spreadsheet-cli.svg)](https://hub.docker.com/r/fgribreau/google-spreadsheet-cli/) [![available-for-advisory](https://img.shields.io/badge/available%20for%20consulting%20advisory-yes-ff69b4.svg?)](http://bit.ly/2c7uFJq) ![extra](https://img.shields.io/badge/actively%20maintained-yes-ff69b4.svg) [![Twitter Follow](https://img.shields.io/twitter/follow/fgribreau.svg?style=flat)](https://twitter.com/FGRibreau)
 
 
@@ -13,12 +15,14 @@
 ## 📢 Features
 
 - List worksheets
+- Add worksheet
+- Remove worksheet
 - Append a row to a worksheet
 - Automatically adds the header row if it's missing
 - Permissive JSON format through [JSON5](http://json5.org/)
 
 
-## Currently supported
+## Help
 
 ```bash
 $ google-spreadsheet-cli
@@ -27,9 +31,9 @@ Commands:
   worksheets <command>  Worksheets related commands
 
 Options:
-  --spreadsheetId, --id  spreadsheet id, the long id in the sheets URL  [required]
-  --credential, --creds  json credential path  [required]
-  -h, --help             Show help  [boolean]
+  --spreadsheetId, --id   spreadsheet id, the long id in the sheets URL  [required]
+  --credentials, --creds  json credential path (use environment variable to specify a JSON stringified credential in base64)  [required]
+  -h, --help              Show help  [boolean]
 
 @FGRibreau - https://twitter.com/FGRibreau
 ```
@@ -41,33 +45,99 @@ First thing first, you need your Google credentials, [follow the authentication 
 
 Locate the spreadsheet you want to work with, take the id from Google spreadsheet URL, e.g. `2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw`.
 
+If you wish to directly pass the base64 stringified JSON as `--credential` parameter you might first want to only keep `client_email` and `private_key` using [jq.node](https://github.com/FGRibreau/jq.node) like so:
+
+```bash
+CREDENTIAL=$(cat ~/myproject-8cbb20000000.json | jq -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
+```
+
+### List worksheets
+
 Then list your document worksheet:
 
 ```bash
 google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credential ~/myproject-8cbb20000000.json \
+  --credentials ~/myproject-8cbb20000000.json \
   worksheets list
 
-od6 - my first worksheet
-od7 - my second worksheet
-ad7 - oh oh oh the last one
+  {"id":"od6","title":"my first worksheet"}
+  {"id":"od7","title":"my second worksheet"}
+  {"id":"ad7","title":"oh oh oh the last one"}
 ```
 
-Once you got the worksheet id it's really simple to append a row:
+... or you could also pass the credential as a base64 encoded JSON:
 
-```
+```bash
 google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credential ~/myproject-8cbb20000000.json \
+  --credentials $CREDENTIAL \
+  worksheets list
+
+{"id":"od6","title":"my first worksheet"}
+{"id":"od7","title":"my second worksheet"}
+{"id":"ad7","title":"oh oh oh the last one"}
+```
+
+### Append a row to a worksheet
+
+`google-spreadsheet-cli worksheets get --worksheet_id {worksheet_id} append --json`
+
+Once you got the `worksheet_id` it's really simple to append a row:
+
+```bash
+google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIAL \
   worksheets \
   get --worksheet_id od6 \
   append --json '{a:1, b:2, c:3}'
 
-Row added.
+{"content":"b: 2, c: 3","title":"1","updated":"2017-04-26T21:46:22.201Z","id":"https://spreadsheets.google.com/feeds/list/2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw/od6/cpzh4"}
 ```
 
 Note that the JSON data we passed was not strictly valid still it worked thanks to JSON5.
+
+### Add a worksheet
+
+`google-spreadsheet-cli worksheets add <title>`
+
+```bash
+google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIAL \
+  worksheets \
+  add my_awesome_worksheet
+
+{"id":"oy7n5ch","title":"my_awesome_worksheet","rowCount":50,"colCount":20,"url":"https://spreadsheets.google.com/feeds/worksheets/2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw/oy7n5ch"}
+```
+
+Other options:
+
+```bash
+bin/google-spreadsheet-cli worksheets add <title>
+
+Options:
+  --spreadsheetId, --id   spreadsheet id, the long id in the sheets URL  [required]
+  --credentials, --creds  json credential path (use environment variable to specify a JSON stringified credential in base64)  [required]
+  --rowCount, --row       number of rows  [default: 50]
+  --colCount, --col       number of columns  [default: 20]
+  -h, --help              Show help  [boolean]
+```
+
+### Remove a worksheet
+
+`google-spreadsheet-cli worksheets remove <worksheet_id>`
+
+```bash
+google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIAL \
+  worksheets \
+  remove od6
+
+{"status": "success"}
+```
 
 ## Setup (docker 🐳)
 
@@ -88,7 +158,12 @@ function google-spreadsheet-cli(){
 source ~/.bashrc
 
 # run it!
-google-spreadsheet-cli --token=XXX append VAL1 VAL2 VAL3
+google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIAL \
+  worksheets \
+  get --worksheet_id od6 \
+  append --json '{a:1, b:2, c:3}'
 
 # done!
 ```
@@ -98,11 +173,5 @@ google-spreadsheet-cli --token=XXX append VAL1 VAL2 VAL3
 ```
 npm i google-spreadsheet-cli -g
 ```
-
-
-## 🔫 Todo
-
-- [ ] Integration tests
-
 
 ## [Changelog](/CHANGELOG.md)

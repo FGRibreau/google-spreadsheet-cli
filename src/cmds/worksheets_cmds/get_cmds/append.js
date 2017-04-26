@@ -38,17 +38,20 @@ function _setRow(value, method = 'addRow') {
 }
 
 exports.handler = function(argv) {
-  Client(argv).then(client => {
-    const ws = find({
-      id: argv.worksheet_id
-    }, client.worksheets);
-    if (!ws) {
-      return Promise.reject(new Error(`Could not find worksheet '${argv.worksheet_id}'`));
-    }
+  Client(argv).then((doc) =>
+    Promise.promisify(doc.getInfo)().then(info => {
+      const ws = find({
+        id: argv.worksheet_id
+      }, info.worksheets);
+      if (!ws) {
+        return Promise.reject(new Error(`Could not find worksheet '${argv.worksheet_id}'`));
+      }
 
-    return ws;
-  }).then(_ensureWorksheetContainsHeaderRowForData(argv)).then(_setRow(argv.json.raw)).then(res => {
-    debug('append %s', JSON5.stringify(res));
-    console.log('Row added.');
-  })
+      return ws;
+    }).then(_ensureWorksheetContainsHeaderRowForData(argv)).then(_setRow(argv.json.raw)).then(res => {
+      debug('append %s', JSON5.stringify(res));
+      const {content, title, updated, id} = res;
+      console.log(JSON.stringify({content, title, updated, id}));
+    })
+  );
 };

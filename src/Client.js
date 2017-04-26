@@ -1,16 +1,14 @@
 'use strict';
+const assert = require('assert');
 const GoogleSpreadsheet = require('google-spreadsheet');
 const debug = require('debug')('client');
 
 function Client(options){
+  assert(options.spreadsheetId);
+  assert(options.credentials);
   const doc = new GoogleSpreadsheet(options.spreadsheetId);
-  const credentials = require(options.credential);
 
-  return Promise.promisify(doc.useServiceAccountAuth)(credentials)
-  .then(() => Promise.promisify(doc.getInfo)())
-  .tap(info => {
-    debug('%s', JSON5.stringify(info));
-  });
+  return Promise.promisify(doc.useServiceAccountAuth)(options.credentials).then(() => doc)
 }
 
 module.exports = Client;

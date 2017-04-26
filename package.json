@@ -2,7 +2,7 @@
   "name": "google-spreadsheet-cli",
   "version": "0.0.4",
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
-  "description": "Google spreadsheet CLI",
+  "description": "📊 CLI for reading and writing data into Google Spreadsheet",
   "engines": {
     "node": "6"
   },
@@ -19,10 +19,10 @@
     "google-spreadsheet-cli": "./bin/google-spreadsheet-cli"
   },
   "scripts": {
-    "test": "true || mocha $(find src -name '*.test.js')",
-    "test:watch": "true || mocha -w $(find src -name '*.test.js')",
-    "test:coverage": "true || nyc --all --statements=100 --lines=100 --functions=100 --branches=100 --check-coverage --reporter=lcov --reporter=cobertura --report-dir=coverage -- npm run --silent test",
-    "test:coverage:send": "true || cat ./coverage/lcov.info | coveralls",
+    "test": "mocha -t 8000 $(find src -name '*.test.js')",
+    "test:watch": "mocha -t 8000  -w $(find src -name '*.test.js')",
+    "test:coverage": "nyc --all --statements=94 --lines=94 --functions=96 --branches=66 --check-coverage --reporter=lcov --reporter=cobertura --report-dir=coverage -- npm run --silent test",
+    "test:coverage:send": "cat ./coverage/lcov.info | coveralls",
     "update": "updtr",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
     "changelog-git": "npm run changelog && git add CHANGELOG.md && git commit -m 'docs(changelog): updated' && git push origin master"
@@ -37,10 +37,10 @@
   },
   "homepage": "https://github.com/fgribreau/google-spreadsheet-cli",
   "keywords": [
-    "google,",
-    "spreadsheet,",
     "google",
-    "apps,",
+    "google spreadsheet",
+    "spreadsheet",
+    "apps",
     "cli"
   ],
   "devDependencies": {
@@ -48,6 +48,7 @@
     "conventional-changelog": "^1.1.0",
     "conventional-changelog-cli": "^1.2.0",
     "coveralls": "^2.11.12",
+    "execa": "^0.6.3",
     "mocha": "^3.0.1",
     "nyc": "^8.1.0",
     "sinon": "^1.17.5",

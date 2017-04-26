@@ -7,17 +7,28 @@ const argv = require('yargs')
 .count('Usage:  $0 <command> [options]');
 
 argv
+  .env('MY_PROGRAM')
   .option('spreadsheetId', {
     alias: 'id',
     describe: 'spreadsheet id, the long id in the sheets URL',
     demandOption: true
   })
-  .option('credential', {
+  .option('credentials', {
     alias: 'creds',
-    describe: 'json credential path',
-    demandOption: true
+    describe: 'json credential path (use environment variable to specify a JSON stringified credential in base64)',
+    demandOption: true,
+    coerce: (jsonAsStringOrPath) => {
+      try{
+        // KISS
+        return JSON5.parse(atob(jsonAsStringOrPath));
+      }catch(err){}
+
+      try{
+        return require(jsonAsStringOrPath);
+      }catch(err){}
+    }
   })
-  .demandOption(['id', 'credential'], 'Please provide spreadsheet id and credential, see: https://github.com/theoephraim/node-google-spreadsheet#authentication')
+  .demandOption(['id', 'credentials'], 'Please provide spreadsheet id and credential, see: https://github.com/theoephraim/node-google-spreadsheet#authentication')
 
 const args = argv
   .commandDir('cmds')
@@ -30,4 +41,9 @@ const args = argv
 
 if(args._.length === 0){
   return argv.showHelp();
+}
+
+
+function atob(str) {
+  return new Buffer(str, 'base64').toString('binary');
 }
