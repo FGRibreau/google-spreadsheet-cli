@@ -8,7 +8,6 @@ const t = require('chai').assert;
 
 const BIN = p.resolve(__dirname, '../bin/google-spreadsheet-cli');
 
-const env = require('common-env/withLogger')(console);
 const TEST_SPREADSHEET_ID = process.env.TEST_SPREADSHEET_ID;
 const TEST_CREDENTIALS = process.env.TEST_CREDENTIALS;
 
