@@ -1,3 +1,4 @@
 .env
 node_modules
 coverage
+killbug-8cbb278e2ca3.json
