@@ -40,7 +40,6 @@ describe('worksheets', () => {
 
   const assertListInclude = (output) => list(result => t.include(result.stdout, output));
   const assertListNotInclude = (output) => list(result => t.notInclude(result.stdout, output));
-  const extractFromListStdOut = flow(split('\n'), first, split('-'), first, trim);
 
   beforeEach(removeAllButOneWorksheets);
 
@@ -65,6 +64,7 @@ describe('worksheets', () => {
     it('remove a worksheet', () => {
       const NAME = `NAME_${+new Date()}`;
       return add([NAME])
+      .then(() => add([NAME+'_']))
       .then(result => {
         const {id} = JSON.parse(result.stdout);
         return assertListInclude(id).then(() => id);
@@ -79,7 +79,7 @@ describe('worksheets', () => {
     describe('append', () => {
       it('add a row into the worksheet', () => {
         return list().then(res => {
-          const id = extractFromListStdOut(res.stdout);
+          const {id} = JSON.parse(res.stdout);
           return execa(BIN, BASE_PARAMS.concat(['worksheets', 'get', '--wsId', id, 'append', '--json', JSON5.stringify({a:1, b: 2, c:3})])).then(result => {
             t.include(result.stdout, `"content":"b: 2, c: 3"`);
           });
