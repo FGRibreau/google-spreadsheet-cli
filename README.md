@@ -21,24 +21,6 @@
 - Automatically adds the header row if it's missing
 - Permissive JSON format through [JSON5](http://json5.org/)
 
-
-## Help
-
-```bash
-$ google-spreadsheet-cli
-
-Commands:
-  worksheets <command>  Worksheets related commands
-
-Options:
-  --spreadsheetId, --id   spreadsheet id, the long id in the sheets URL  [required]
-  --credentials, --creds  json credential path (use environment variable to specify a JSON stringified credential in base64)  [required]
-  -h, --help              Show help  [boolean]
-
-@FGRibreau - https://twitter.com/FGRibreau
-```
-
-
 ### 🎩 Authentication
 
 First thing first, you need your Google credentials, [follow the authentication instructions there](https://github.com/theoephraim/node-google-spreadsheet#service-account-recommended-method). Then save the JSON file somewhere, e.g. `~/myproject-8cbb20000000.json`.
