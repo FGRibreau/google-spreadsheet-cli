@@ -1,3 +1,19 @@
+<a name="1.0.0"></a>
+# 1.0.0 (2017-04-26)
+
+* docs(README) ([bf28c37](https://github.com/fgribreau/google-spreadsheet-cli/commit/bf28c37))
+* docs(README) ([bc9b50f](https://github.com/fgribreau/google-spreadsheet-cli/commit/bc9b50f))
+* feat(add/remove/acceptance) ([7605375](https://github.com/fgribreau/google-spreadsheet-cli/commit/7605375))
+* feat(CHANGELOG) ([0a16b8f](https://github.com/fgribreau/google-spreadsheet-cli/commit/0a16b8f))
+* fix(acceptance) ([e0fa2d4](https://github.com/fgribreau/google-spreadsheet-cli/commit/e0fa2d4))
+* fix(acceptance) ([bea7131](https://github.com/fgribreau/google-spreadsheet-cli/commit/bea7131))
+* fix(ci) ([4af3578](https://github.com/fgribreau/google-spreadsheet-cli/commit/4af3578))
+* fix(gitignore) ([0189c51](https://github.com/fgribreau/google-spreadsheet-cli/commit/0189c51))
+* fix(test) ([cd692cd](https://github.com/fgribreau/google-spreadsheet-cli/commit/cd692cd))
+* Release v1.0.0. ([639a5cd](https://github.com/fgribreau/google-spreadsheet-cli/commit/639a5cd))
+
+
+
 <a name="0.0.4"></a>
 ## 0.0.4 (2017-04-25)
 
