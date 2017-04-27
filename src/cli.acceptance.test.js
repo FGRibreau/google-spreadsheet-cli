@@ -14,7 +14,7 @@ const TEST_CREDENTIALS = process.env.TEST_CREDENTIALS;
 t.ok(TEST_SPREADSHEET_ID.length > 0);
 t.ok(TEST_CREDENTIALS.length > 0);
 
-const BASE_PARAMS = ['--spreadsheetId',TEST_SPREADSHEET_ID, '--credentials', TEST_CREDENTIALS];
+const BASE_PARAMS = ['--spreadsheetId', TEST_SPREADSHEET_ID, '--credentials', TEST_CREDENTIALS];
 
 describe('--help', () => {
   it('display help', () => {
@@ -26,8 +26,8 @@ describe('--help', () => {
 
 describe('worksheets', () => {
   // helpers
-  function removeAllButOneWorksheets(){
-    function tryToRemove(){
+  function removeAllButOneWorksheets() {
+    function tryToRemove() {
       return execa(BIN, BASE_PARAMS.concat(['worksheets', 'remove', '1']));
     }
 
@@ -45,10 +45,17 @@ describe('worksheets', () => {
 
   describe('add', () => {
     it('adds a worksheet', () => {
-      const NAME = `NAME_${+new Date()}`;
+      const NAME = `NAME_${ + new Date()}`;
       const ROW_COUNT = 150;
       const COL_COUNT = 149;
-      return add([NAME, '--rowCount', ROW_COUNT, , '--colCount', COL_COUNT]).then(result => {
+      return add([
+        NAME,
+        '--rowCount',
+        ROW_COUNT,
+        ,
+        '--colCount',
+        COL_COUNT
+      ]).then(result => {
         const {id, title, rowCount, colCount} = parse(result.stdout);
         t.strictEqual(title, NAME);
         t.strictEqual(rowCount, ROW_COUNT);
@@ -59,29 +66,66 @@ describe('worksheets', () => {
     });
   });
 
-
   describe('remove', () => {
     it('remove a worksheet', () => {
-      const NAME = `NAME_${+new Date()}`;
-      return add([NAME])
-      .then(() => add([NAME+'_']))
-      .then(result => {
+      const NAME = `NAME_${ + new Date()}`;
+      return add([NAME]).then(() => add([NAME + '_'])).then(result => {
         const {id} = JSON.parse(result.stdout);
         return assertListInclude(id).then(() => id);
-      })
-      .then((id) => remove(id).then((res) => id))
-      .then((id) => assertListNotInclude(id))
+      }).then((id) => remove(id).then((res) => id)).then((id) => assertListNotInclude(id))
     });
   });
 
-
   describe('get', () => {
     describe('append', () => {
-      it('add a row into the worksheet', () => {
+      it('add a row into the worksheet using raw JSON', () => {
         return list().then(res => {
           const {id} = parse(res.stdout);
-          return execa(BIN, BASE_PARAMS.concat(['worksheets', 'get', '--wsId', id, 'append', '--json', JSON5.stringify({a:1, b: 2, c:3})])).then(result => {
-            t.include(result.stdout, `"content":"b: 2, c: 3"`);
+          return execa(BIN, BASE_PARAMS.concat([
+            'worksheets',
+            'get',
+            '--wsId',
+            id,
+            'append',
+            '--json',
+            JSON.stringify({a: 1, b: 2, c: 3})
+          ])).then(result => {
+            console.log(result.stdout);
+            t.strictEqual(JSON.parse(result.stdout).content, `b: 2, c: 3`);
+          });
+        });
+      });
+
+      it('add a row into the worksheet using raw JSON5', () => {
+        return list().then(res => {
+          const {id} = parse(res.stdout);
+          return execa(BIN, BASE_PARAMS.concat([
+            'worksheets',
+            'get',
+            '--wsId',
+            id,
+            'append',
+            '--json',
+            JSON5.stringify({a: 1, b: 2, c: 3})
+          ])).then(result => {
+            t.strictEqual(JSON.parse(result.stdout).content, `b: 2, c: 3`);
+          });
+        });
+      });
+
+      it('add a row into the worksheet using base64 encoded JSON', () => {
+        return list().then(res => {
+          const {id} = parse(res.stdout);
+          return execa(BIN, BASE_PARAMS.concat([
+            'worksheets',
+            'get',
+            '--wsId',
+            id,
+            'append',
+            '--json',
+            btoa(JSON5.stringify({a: 1, b: 2, c: 3}))
+          ])).then(result => {
+            t.strictEqual(JSON.parse(result.stdout).content, `b: 2, c: 3`);
           });
         });
       });
@@ -89,13 +133,16 @@ describe('worksheets', () => {
   });
 });
 
-
-function parse(str){
-  try{
+function parse(str) {
+  try {
     return JSON.parse(str);
-  } catch(err){
+  } catch (err) {
     console.error(err);
     console.error(str);
     throw err;
   }
+}
+
+function btoa(str) {
+  return new Buffer(str.toString(), 'binary').toString('base64');
 }

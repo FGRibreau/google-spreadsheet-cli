@@ -1,5 +1,8 @@
+'use strict';
+
 const {find, keys, fromPairs, zip, flow, isPlainObject} = require('lodash/fp');
 const debug = require('debug')('append');
+const isBase64 = require('is-base64');
 
 exports.command = 'append';
 exports.desc = 'Append a row to the worksheet';
@@ -14,7 +17,7 @@ exports.builder = function(yargs) {
       debug('got jsonAsString=%s', jsonAsString);
 
       // if it's base64 encoded first decode it
-      const decodedAsString = tryOrElse(() => atob(jsonAsString), jsonAsString);
+      const decodedAsString = isBase64(jsonAsString) ? atob(jsonAsString) : jsonAsString;
       debug('got decodedAsString=%s', decodedAsString);
 
       // parse it using JSON5

@@ -58,6 +58,7 @@
     "bluebird": "^3.5.0",
     "debug": "^2.6.4",
     "google-spreadsheet": "^2.0.3",
+    "is-base64": "^0.0.2",
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
     "yargs": "^7.1.0"
