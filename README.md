@@ -18,6 +18,7 @@
 - Append a row to a worksheet
 - Automatically adds the header row if it's missing
 - Permissive JSON format through [JSON5](http://json5.org/)
+- Available as a [docker image](https://hub.docker.com/r/fgribreau/google-spreadsheet-cli/)
 
 ### 🎩 Authentication
 
