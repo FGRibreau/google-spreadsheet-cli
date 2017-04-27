@@ -49,7 +49,7 @@ describe('worksheets', () => {
       const ROW_COUNT = 150;
       const COL_COUNT = 149;
       return add([NAME, '--rowCount', ROW_COUNT, , '--colCount', COL_COUNT]).then(result => {
-        const {id, title, rowCount, colCount} = JSON.parse(result.stdout);
+        const {id, title, rowCount, colCount} = parse(result.stdout);
         t.strictEqual(title, NAME);
         t.strictEqual(rowCount, ROW_COUNT);
         t.strictEqual(colCount, COL_COUNT);
@@ -79,7 +79,7 @@ describe('worksheets', () => {
     describe('append', () => {
       it('add a row into the worksheet', () => {
         return list().then(res => {
-          const {id} = JSON.parse(res.stdout);
+          const {id} = parse(res.stdout);
           return execa(BIN, BASE_PARAMS.concat(['worksheets', 'get', '--wsId', id, 'append', '--json', JSON5.stringify({a:1, b: 2, c:3})])).then(result => {
             t.include(result.stdout, `"content":"b: 2, c: 3"`);
           });
@@ -88,3 +88,14 @@ describe('worksheets', () => {
     });
   });
 });
+
+
+function parse(str){
+  try{
+    return JSON.parse(str);
+  } catch(err){
+    console.error(err);
+    console.error(str);
+    throw err;
+  }
+}
