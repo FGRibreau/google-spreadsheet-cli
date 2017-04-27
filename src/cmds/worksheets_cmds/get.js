@@ -3,7 +3,7 @@ exports.desc = 'Get a worksheet';
 
 exports.builder = function (yargs) {
   return yargs
-    .option('worksheet_id', {
+    .option('worksheetId', {
       alias: 'wsId',
       describe: 'worksheet id, use `worksheets list` to list spreadsheet worksheet ids.',
       demandOption: true

@@ -15,7 +15,7 @@ argv
   })
   .option('credentials', {
     alias: 'creds',
-    describe: 'json credential path (use environment variable to specify a JSON stringified credential in base64)',
+    describe: 'json credential path or JSON stringified credential in base64. See https://github.com/theoephraim/node-google-spreadsheet#authentication',
     demandOption: true,
     coerce: (jsonAsStringOrPath) => {
       try{
@@ -27,8 +27,7 @@ argv
         return require(jsonAsStringOrPath);
       }catch(err){}
     }
-  })
-  .demandOption(['id', 'credentials'], 'Please provide spreadsheet id and credential, see: https://github.com/theoephraim/node-google-spreadsheet#authentication')
+  });
 
 const args = argv
   .commandDir('cmds')

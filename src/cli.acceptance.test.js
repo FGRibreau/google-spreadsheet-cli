@@ -36,7 +36,7 @@ describe('worksheets', () => {
 
   const list = (f = (a) => a) => execa(BIN, BASE_PARAMS.concat(['worksheets', 'list'])).then(f);
   const add = (args, f) => execa(BIN, BASE_PARAMS.concat(['worksheets', 'add'].concat(args))).then(f);
-  const remove = (worksheet_id) => execa(BIN, BASE_PARAMS.concat(['worksheets', 'remove', worksheet_id]));
+  const remove = (worksheetId) => execa(BIN, BASE_PARAMS.concat(['worksheets', 'remove', worksheetId]));
 
   const assertListInclude = (output) => list(result => t.include(result.stdout, output));
   const assertListNotInclude = (output) => list(result => t.notInclude(result.stdout, output));

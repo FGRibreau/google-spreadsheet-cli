@@ -20,17 +20,19 @@
 - Permissive JSON format through [JSON5](http://json5.org/)
 - Available as a [docker image](https://hub.docker.com/r/fgribreau/google-spreadsheet-cli/)
 
-### 🎩 Authentication
+## 🎩 Authentication
 
 First thing first, you need your Google credentials, [follow the authentication instructions there](https://github.com/theoephraim/node-google-spreadsheet#service-account-recommended-method). Then save the JSON file somewhere, e.g. `~/myproject-8cbb20000000.json`.
 
 Locate the spreadsheet you want to work with, take the id from Google spreadsheet URL, e.g. `2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw`.
 
-If you wish to directly pass the base64 stringified JSON as `--credential` parameter you might first want to only keep `client_email` and `private_key` using [jq.node](https://github.com/FGRibreau/jq.node) like so:
+If you wish to directly pass the base64 stringified JSON as `--credentials` parameter you might first want to only keep `client_email` and `private_key` using [jq.node](https://github.com/FGRibreau/jq.node) like so:
 
 ```bash
 export CREDENTIALS=$(cat ~/myproject-8cbb20000000.json | jq -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
 ```
+
+## 😇 Documentation
 
 ### `worksheets list`
 
@@ -42,12 +44,12 @@ google-spreadsheet-cli \
   --credentials ~/myproject-8cbb20000000.json \
   worksheets list
 
-  {"id":"od6","title":"my first worksheet"}
-  {"id":"od7","title":"my second worksheet"}
-  {"id":"ad7","title":"oh oh oh the last one"}
+{"id":"od6","title":"my first worksheet"}
+{"id":"od7","title":"my second worksheet"}
+{"id":"ad7","title":"oh oh oh the last one"}
 ```
 
-... or you could also pass the credential as a base64 encoded JSON:
+... or you could also pass the credential as a JSON base64 encoded string:
 
 ```bash
 google-spreadsheet-cli \
@@ -59,23 +61,6 @@ google-spreadsheet-cli \
 {"id":"od7","title":"my second worksheet"}
 {"id":"ad7","title":"oh oh oh the last one"}
 ```
-
-### `worksheets get --worksheet_id {worksheet_id} append --json`
-
-Append a row to a worksheet. Once you got the `worksheet_id` it's really simple to append a row:
-
-```bash
-$ google-spreadsheet-cli \
-  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
-  --credentials $CREDENTIALS \
-  worksheets \
-  get --worksheet_id od6 \
-  append --json '{a:1, b:2, c:3}'
-
-{"content":"b: 2, c: 3","title":"1","updated":"2017-04-26T21:46:22.201Z","id":"https://spreadsheets.google.com/feeds/list/2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw/od6/cpzh4"}
-```
-
-Note that the JSON data we passed was not strictly valid still it worked thanks to JSON5.
 
 ### `worksheets add <title>`
 
@@ -101,7 +86,7 @@ Other options:
   -h, --help              Show help  [boolean]
 ```
 
-### `worksheets remove <worksheet_id>`
+### `worksheets remove <worksheetId>`
 
 Remove a worksheet from the spreadsheet document:
 
@@ -113,6 +98,45 @@ $ google-spreadsheet-cli \
   remove od6
 
 {"status": "success"}
+```
+
+### `worksheets get --worksheetId {worksheetId} append --json`
+
+Append a row to a worksheet. Once you got the `worksheetId` it's really simple to append a row:
+
+#### Passing raw JSON
+
+```bash
+$ google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIALS \
+  worksheets \
+  get --worksheetId od6 \
+  append --json '{a:1, b:2, c:3}'
+
+{"content":"b: 2, c: 3","title":"1","updated":"2017-04-26T21:46:22.201Z","id":"https://spreadsheets.google.com/feeds/list/2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw/od6/cpzh4"}
+```
+
+Note that the JSON data we passed was not strictly valid still it worked thanks to [JSON5](https://json5.org).
+
+#### Passing base64 encoded JSON
+
+As soon as you will have quotes or special characters inside your JSON, things are going to be messy. Fortunately you can also pass a base64 encoded JSON to `--json`.
+
+```bash
+$ JSON=$(echo '{a:1, b:2, c:3}' | base64)
+
+$ echo $JSON
+e2E6MSwgYjoyLCBjOjN9Cg==
+
+$ google-spreadsheet-cli \
+  --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
+  --credentials $CREDENTIALS \
+  worksheets \
+  get --worksheetId od6 \
+  append --json $JSON
+
+{"content":"b: 2, c: 3","title":"1","updated":"2017-04-26T21:46:22.201Z","id":"https://spreadsheets.google.com/feeds/list/2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw/od6/cpzh4"}
 ```
 
 ## Setup (docker 🐳)
@@ -138,7 +162,7 @@ google-spreadsheet-cli \
   --id 2CVmfghQmkMdLct11Tfo0aqv1WtnPA-chuYDUMEvoVPw \
   --credentials $CREDENTIALS \
   worksheets \
-  get --worksheet_id od6 \
+  get --worksheetId od6 \
   append --json '{a:1, b:2, c:3}'
 
 # done!

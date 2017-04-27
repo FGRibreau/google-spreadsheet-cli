@@ -1,4 +1,4 @@
-const {find, keys, fromPairs, zip, flow} = require('lodash/fp');
+const {find, keys, fromPairs, zip, flow, isPlainObject} = require('lodash/fp');
 const debug = require('debug')('append');
 
 exports.command = 'append';
@@ -7,22 +7,33 @@ exports.desc = 'Append a row to the worksheet';
 exports.builder = function(yargs) {
   return yargs.option('json', {
     alias: 'd',
-    describe: 'data to add as JSON key/value, keys must match the header row on your sheet',
+    describe: 'data to add as JSON key/value, keys must match the header row on your sheet. JSON can be base64 encoded and is JSON5 compatible.',
     demandOption: true,
     type: 'string',
     coerce: (jsonAsString) => {
-      const json = JSON5.parse(jsonAsString);
-      return {
-        raw: json,
-        keys: keys(json)
+      debug('got jsonAsString=%s', jsonAsString);
+
+      // if it's base64 encoded first decode it
+      const decodedAsString = tryOrElse(() => atob(jsonAsString), jsonAsString);
+      debug('got decodedAsString=%s', decodedAsString);
+
+      // parse it using JSON5
+      const json = JSON5.parse(decodedAsString);
+
+      debug('got json=%s', JSON.stringify(json));
+
+      if (!isPlainObject(json)) {
+        throw new Error(`data must be JSON: ${decodedAsString}`)
       }
+
+      return {raw: json, keys: keys(json)}
     }
   });
 };
 
 function _ensureWorksheetContainsHeaderRowForData(argv) {
   return (ws) => Promise.promisify(ws.getRows)({offset: 0, limit: 1}).then((row) => {
-    if(!Array.isArray(row) || row.length === 0){
+    if (!Array.isArray(row) || row.length === 0) {
       // add the first row
       debug('header row not found');
       debug('setting header row %s', argv.json.keys);
@@ -38,20 +49,32 @@ function _setRow(value, method = 'addRow') {
 }
 
 exports.handler = function(argv) {
-  Client(argv).then((doc) =>
-    Promise.promisify(doc.getInfo)().then(info => {
-      const ws = find({
-        id: argv.worksheet_id
-      }, info.worksheets);
-      if (!ws) {
-        return Promise.reject(new Error(`Could not find worksheet '${argv.worksheet_id}'`));
-      }
+  Client(argv).then((doc) => Promise.promisify(doc.getInfo)().then(info => {
+    const ws = find({
+      id: argv.worksheetId
+    }, info.worksheets);
+    if (!ws) {
+      return Promise.reject(new Error(`Could not find worksheet '${argv.worksheetId}'`));
+    }
 
-      return ws;
-    }).then(_ensureWorksheetContainsHeaderRowForData(argv)).then(_setRow(argv.json.raw)).then(res => {
-      debug('append %s', JSON5.stringify(res));
-      const {content, title, updated, id} = res;
-      console.log(JSON.stringify({content, title, updated, id}));
-    })
-  );
+    return ws;
+  }).then(_ensureWorksheetContainsHeaderRowForData(argv)).then(_setRow(argv.json.raw)).then(res => {
+    debug('append %s', JSON5.stringify(res));
+    const {content, title, updated, id} = res;
+    console.log(JSON.stringify({content, title, updated, id}));
+  }));
 };
+
+function atob(str) {
+  return new Buffer(str.toString(), 'base64').toString('utf8');
+}
+
+
+function tryOrElse(f, defVal){
+  try{
+    return f();
+  }catch(err){
+    console.error(err);
+  }
+  return defVal;
+}
