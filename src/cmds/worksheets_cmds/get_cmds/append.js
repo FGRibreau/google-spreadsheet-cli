@@ -21,7 +21,7 @@ exports.builder = function(yargs) {
       debug('got decodedAsString=%s', decodedAsString);
 
       // parse it using JSON5
-      const json = JSON5.parse(decodedAsString);
+      const json = tryOrElse(() => JSON5.parse(decodedAsString), false);
 
       debug('got json=%s', JSON.stringify(json));
 

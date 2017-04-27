@@ -38,11 +38,6 @@ const args = argv
   .alias('v', 'verbose')
   .argv;
 
-if(args._.length === 0){
-  return argv.showHelp();
-}
-
-
 function atob(str) {
   return new Buffer(str, 'base64').toString('binary');
 }

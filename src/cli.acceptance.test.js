@@ -128,6 +128,40 @@ describe('worksheets', () => {
           });
         });
       });
+
+      it.only('throws if worksheet is not found', () => {
+        return execa(BIN, BASE_PARAMS.concat([
+          'worksheets',
+          'get',
+          '--wsId',
+          'plop',
+          'append',
+          '--json',
+          btoa(JSON5.stringify({a: 1, b: 2, c: 3}))
+        ])).then(result => {
+          t.fail();
+        }, (err) => {
+          t.include(err.message, 'Could not find worksheet');
+          return Promise.resolve();
+        });
+      });
+
+      it('throws if JSON was not a JSON', () => {
+        return execa(BIN, BASE_PARAMS.concat([
+          'worksheets',
+          'get',
+          '--wsId',
+          'plop',
+          'append',
+          '--json',
+          'spoqidfjqpsoidfj:'
+        ])).then(result => {
+          t.fail();
+        }, (err) => {
+          t.include(err.message, 'data must be JSON');
+          return Promise.resolve();
+        });
+      });
     });
   });
 });
