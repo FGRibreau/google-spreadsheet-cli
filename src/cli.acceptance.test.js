@@ -129,7 +129,7 @@ describe('worksheets', () => {
         });
       });
 
-      it.only('throws if worksheet is not found', () => {
+      it('throws if worksheet is not found', () => {
         return execa(BIN, BASE_PARAMS.concat([
           'worksheets',
           'get',
