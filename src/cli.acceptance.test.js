@@ -90,7 +90,6 @@ describe('worksheets', () => {
             '--json',
             JSON.stringify({a: 1, b: 2, c: 3})
           ])).then(result => {
-            console.log(result.stdout);
             t.strictEqual(JSON.parse(result.stdout).content, `b: 2, c: 3`);
           });
         });
