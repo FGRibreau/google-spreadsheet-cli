@@ -5,9 +5,10 @@
 ![deps](https://img.shields.io/david/fgribreau/google-spreadsheet-cli.svg?style=flat) ![Version](https://img.shields.io/npm/v/google-spreadsheet-cli.svg?style=flat) [![Docker hub](https://img.shields.io/docker/pulls/fgribreau/google-spreadsheet-cli.svg)](https://hub.docker.com/r/fgribreau/google-spreadsheet-cli/) [![available-for-advisory](https://img.shields.io/badge/available%20for%20consulting%20advisory-yes-ff69b4.svg?)](http://bit.ly/2c7uFJq) ![extra](https://img.shields.io/badge/actively%20maintained-yes-ff69b4.svg) [![Twitter Follow](https://img.shields.io/twitter/follow/fgribreau.svg?style=flat)](https://twitter.com/FGRibreau)
 
 
-> ## ❤️ Shameless plug
-> - [**Charts, simple as a URL**. No more server-side rendering pain, 1 url = 1 chart](https://image-charts.com)
-> - [Looking for a free **Redis GUI**?](http://redsmin.com) [Or for **real-time alerting** & monitoring for Redis?](http://redsmin.com)
+## ❤️ Shameless plug
+- [Open-Source self-hostable or fully-managed **webhook as a service**](https://www.hook0.com/)
+- [**Charts, simple as a URL**. No more server-side rendering pain, 1 url = 1 chart](https://image-charts.com)
+- [Looking for a managed Keycloak IAM ?](https://www.cloud-iam.com/)
 
 ## 📢 Features
 
