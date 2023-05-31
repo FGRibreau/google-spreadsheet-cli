@@ -29,7 +29,7 @@ Locate the spreadsheet you want to work with, take the id from Google spreadshee
 If you wish to directly pass the base64 stringified JSON as `--credentials` parameter you might first want to only keep `client_email` and `private_key` using [jq.node](https://github.com/FGRibreau/jq.node) like so:
 
 ```bash
-export CREDENTIALS=$(cat ~/myproject-8cbb20000000.json | jq -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
+export CREDENTIALS=$(cat ~/myproject-8cbb20000000.json | jqn -r btoa 'pick(["client_email", "private_key"]) | JSON.stringify | btoa')
 ```
 
 ## 😇 Documentation
